@@ -102,6 +102,9 @@ button.sm{padding:5px 10px;font-size:12px}
 .gmap{display:flex;flex-direction:column;gap:3px;margin:4px 0 10px 22px;padding-left:12px;border-left:2px solid var(--line);font-size:12.5px;color:var(--mute)}
 .gmap span.hit{color:#fff;background:var(--blue);border-radius:5px;padding:4px 8px;font-weight:500;align-self:flex-start}
 .gmap span.end{color:var(--ink);font-weight:500;border:1px solid var(--line);border-radius:5px;padding:3px 8px;align-self:flex-start;margin-top:4px}
+.fixed{font-family:var(--mono);font-size:11.5px;background:var(--code);border:1px solid var(--line);border-radius:5px;padding:6px 8px;word-break:break-all;color:var(--ink2);display:block;font-weight:400}
+.hint .fixed{display:inline;padding:1px 5px}
+.norma{margin:0;font-size:12.5px;color:var(--ink2);border-left:3px solid var(--acc);padding:6px 10px;background:var(--code);border-radius:0 6px 6px 0}
 .faq{margin:0;display:grid;gap:4px}
 .faq dt{font-weight:500;margin-top:10px}
 .faq dd{margin:0;color:var(--ink2)}
@@ -164,35 +167,23 @@ footer{margin-top:28px;color:var(--mute);font-size:12px;border-top:1px solid var
       </section>
 
       <section class="panel">
-        <h2>Tipografía y tamaños</h2>
-        <div class="fields">
-          <label class="f">Marcadores de contacto
-            <select id="iconStyle"><option value="icon">Íconos en círculo de color</option><option value="letter">Letras (E, T, M, W, D)</option></select>
-          </label>
-          <div class="two">
-            <label class="f">Fuente del nombre
-              <select id="fontName"></select>
-            </label>
-            <label class="f">Fuente del texto
-              <select id="fontBody"></select>
-            </label>
-          </div>
-          <p class="hint">Typo Formal Demo y Louis George Cafe se ven solo en equipos que las tienen instaladas; el resto de lectores recibe Helvetica o Arial. Para previsualizarlas aquí, carga los archivos:</p>
-          <div class="file"><span class="hint" style="min-width:130px">Typo Formal Demo</span><input type="file" id="ffTypo" accept=".ttf,.otf,.woff,.woff2"></div>
-          <div class="file"><span class="hint" style="min-width:130px">Louis George Cafe</span><input type="file" id="ffLouis" accept=".ttf,.otf,.woff,.woff2"></div>
-        </div>
-      </section>
-
-      <section class="panel">
         <h2>Logotipos</h2>
         <div class="fields">
-          <label class="f">Carpeta pública de imágenes (logos e íconos)<input type="url" id="imgBase" placeholder="https://usuario.github.io/firmas-idc/"></label>
-          <p class="hint">Sube ahí el paquete de imágenes sin cambiar los nombres de archivo. Con esta carpeta, las imágenes de la firma se ven en Gmail.</p>
-          <label class="f">URL pública del logo IDC (PNG/JPG)<input type="url" id="idcUrl" placeholder="https://…/logo-idc.png"></label>
-          <p class="hint">Vacío: se usa el logo incrustado (Gmail no lo muestra; usa la carpeta pública).</p>
-          <div class="file"><span class="hint">Logo de <b id="espNameLbl"></b>:</span><input type="file" id="espFile" accept="image/png,image/jpeg,image/gif"></div>
-          <label class="f">o URL pública del logo de la especialidad<input type="url" id="espUrl" placeholder="https://…/logo-especialidad.png"></label>
-          <label class="check"><input type="checkbox" id="bothLogos"> Mostrar también el logo institucional IDC</label>
+          <p class="norma">Los logotipos se aplican de acuerdo con las normas técnicas del Manual de Uso de Marca del Instituto de Educación Superior Público «Diseño y Comunicación».</p>
+          <div class="f">Dirección de las imágenes (no editable)
+            <code class="fixed">https://uinvestigacion-idc.github.io/firmas-idc/</code>
+          </div>
+          <label class="f">Logo de la firma
+            <select id="logoSel">
+              <option value="auto">Según la especialidad elegida</option>
+              <option value="inst">Institucional — idc.png</option>
+              <option value="int">Diseño de Interiores — logo-int.png</option>
+              <option value="pub">Diseño Publicitario — logo-pub.png</option>
+              <option value="mod">Diseño de Modas — logo-mod.png</option>
+              <option value="cav">Comunicación Audiovisual — logo-cav.png</option>
+            </select>
+          </label>
+          <p class="hint">Dirección del logo en uso: <code class="fixed" id="logoUrl"></code></p>
         </div>
       </section>
 
@@ -219,6 +210,7 @@ footer{margin-top:28px;color:var(--mute);font-size:12px;border-top:1px solid var
           <div class="meta">Para: estudiante@idc.edu.pe · Asunto: Entrega de avance</div>
           <p class="body">Buenos días,<br><br>Adjunto las observaciones de la sesión. Quedo atento.<br><br>Saludos cordiales,</p>
           <div id="sig"></div>
+          <div id="sigCopy" hidden style="position:absolute;left:-9999px;top:0;background:#fff"></div>
         </div>
       </div>
 
@@ -249,31 +241,17 @@ footer{margin-top:28px;color:var(--mute);font-size:12px;border-top:1px solid var
   <section class="panel guide" id="guia">
     <h2>Cómo instalar la firma</h2>
     <div class="tabs" role="tablist" aria-label="Programa de correo">
-      <button type="button" role="tab" id="t-img" aria-controls="p-img" aria-selected="true">Paso previo: publicar imágenes</button>
-      <button type="button" role="tab" id="t-gm" aria-controls="p-gm" aria-selected="false">Gmail</button>
+      <button type="button" role="tab" id="t-gm" aria-controls="p-gm" aria-selected="true">Gmail</button>
       <button type="button" role="tab" id="t-fx" aria-controls="p-fx" aria-selected="false">Problemas frecuentes</button>
     </div>
 
-    <div class="tabpanel" role="tabpanel" id="p-img" aria-labelledby="t-img">
-      <p class="lead">Se hace una sola vez. Los programas de correo muestran las imágenes de la firma (logo e íconos) solo si están en una dirección pública de internet. Gmail elimina las imágenes incrustadas, y Gmail rechaza firmas de más de 10 000 caracteres.</p>
-      <ol class="steps">
-        <li>Descomprime el archivo <code>firmas-idc-imagenes.zip</code>. Contiene la carpeta <code>firmas-idc</code> con 30 imágenes: <code>idc.png</code>, <code>logo-int.png</code>, <code>logo-pub.png</code>, <code>logo-mod.png</code>, <code>logo-cav.png</code> y los íconos <code>icono-…png</code>. No cambies los nombres.</li>
-        <li>Entra a <b>github.com</b> con tu cuenta. Pulsa <b>+</b> (arriba a la derecha) › <b>New repository</b>. En <i>Repository name</i> escribe <code>firmas-idc</code>, marca <b>Public</b> y pulsa <b>Create repository</b>.</li>
-        <li>En el repositorio pulsa <b>Add file</b> › <b>Upload files</b>. Arrastra las 30 imágenes (el contenido de la carpeta, no la carpeta) y pulsa <b>Commit changes</b>.</li>
-        <li>Ve a <b>Settings</b> › <b>Pages</b>. En <i>Source</i> elige <b>Deploy from a branch</b>; en <i>Branch</i> elige <b>main</b> y <b>/ (root)</b>; pulsa <b>Save</b>.</li>
-        <li>Espera 1 o 2 minutos. La dirección de la carpeta será <code>https://USUARIO.github.io/firmas-idc/</code> (reemplaza USUARIO por tu nombre de usuario). Compruébala abriendo <code>https://USUARIO.github.io/firmas-idc/idc.png</code> en el navegador: debe verse el logo.</li>
-        <li>En esta página, pega esa dirección en <b>Logotipos › Carpeta pública de imágenes</b>. El aviso amarillo «Antes de instalar» desaparece. Pulsa <b>Guardar datos</b>.</li>
-      </ol>
-      <p class="hint">Si el IDC tiene un servidor web propio, puede usarse en lugar de GitHub: basta con subir los 30 archivos a una carpeta pública y pegar su dirección.</p>
-    </div>
-
-    <div class="tabpanel" role="tabpanel" id="p-gm" aria-labelledby="t-gm" hidden>
+    <div class="tabpanel" role="tabpanel" id="p-gm" aria-labelledby="t-gm">
       <p class="lead">Para la cuenta institucional de Google Workspace, que en la configuración aparece como <b>«Correo de IDC»</b>, desde el navegador de la computadora. La app de Gmail del celular no admite esta firma.</p>
 
       <div class="part">
         <h3><span class="tag">Antes</span>Comprueba dos cosas</h3>
         <ul class="pre">
-          <li>Las imágenes están publicadas y su dirección está en <b>Logotipos › Carpeta pública de imágenes</b>. Si todavía ves el recuadro amarillo <b>«Antes de instalar»</b> junto a la vista previa, falta la pestaña <b>Paso previo: publicar imágenes</b>.</li>
+          <li>En <b>Logotipos › Logo de la firma</b> está elegido el logo correcto.</li>
           <li>Tienes esta página abierta en una pestaña del navegador y el correo del IDC en otra.</li>
         </ul>
       </div>
@@ -336,13 +314,13 @@ footer{margin-top:28px;color:var(--mute);font-size:12px;border-top:1px solid var
     <div class="tabpanel" role="tabpanel" id="p-fx" aria-labelledby="t-fx" hidden>
       <dl class="faq">
         <dt>Las imágenes aparecen rotas o no aparecen</dt>
-        <dd>La carpeta pública no es correcta o aún no está activa. Abre en el navegador la dirección de la carpeta seguida de <code>idc.png</code>. Si no se ve el logo, revisa la pestaña «Paso previo: publicar imágenes».</dd>
+        <dd>La cuenta que recibe bloquea imágenes externas o el archivo no está en la carpeta. Abre en el navegador <code>https://uinvestigacion-idc.github.io/firmas-idc/idc.png</code>: si no se ve el logo, el archivo no está disponible en la carpeta.</dd>
         <dt>Al pegar, la firma sale como texto sin formato</dt>
         <dd>El navegador no permitió copiar con formato. Pulsa <b>Copiar firma</b> otra vez: la firma queda seleccionada en la vista previa; cópiala con <b>Ctrl + C</b> y pégala.</dd>
         <dt>Gmail indica que la firma es demasiado larga</dt>
-        <dd>Las imágenes van incrustadas. Completa la pestaña «Paso previo: publicar imágenes» y pega la dirección en «Carpeta pública de imágenes» antes de copiar.</dd>
+        <dd>Se pegó una copia antigua de la firma. Vuelve a pulsar «Copiar firma» en esta página y pega de nuevo.</dd>
         <dt>La tipografía cambia a Helvetica o Arial</dt>
-        <dd>Typo Formal Demo y Louis George Cafe solo se ven en equipos que las tienen instaladas. El resto de lectores ve Helvetica o Arial.</dd>
+        <dd>Louis George Cafe solo se ve en equipos que la tienen instalada. El resto de lectores ve Helvetica o Arial.</dd>
         <dt>En el celular no aparece la firma</dt>
         <dd>La app de Gmail para el celular tiene su propio ajuste de firma, de solo texto. Escribe allí nombre, cargo y correo.</dd>
       </dl>
@@ -381,7 +359,6 @@ var ESP = {
   cav:  { n: "Comunicación Audiovisual", c: "#f3a20b" }
 };
 var FONTS = {
-  typo:  { n: "Typo Formal Demo", s: "'Typo Formal Demo', Helvetica, Arial, sans-serif" },
   louis: { n: "Louis George Cafe", s: "'Louis George Cafe', Helvetica, Arial, sans-serif" },
   helv:  { n: "Helvetica", s: "Helvetica, Arial, sans-serif" }
 };
@@ -404,21 +381,23 @@ function iconURI(type, color){
   return (ICON_CACHE[k] = cv.toDataURL("image/png"));
 }
 window.__iconURI = iconURI;
-function baseUrl(){ var b = (S.imgBase || "").trim(); return b ? b.replace(/\/+$/, "") + "/" : ""; }
+var IMG_BASE_FIXED = "https://uinvestigacion-idc.github.io/firmas-idc/";
+function logoKey(){ return (S.logoSel && S.logoSel !== "auto") ? S.logoSel : S.esp; }
+function logoFile(k){ return k === "inst" ? "idc.png" : "logo-" + k + ".png"; }
 var DEFAULTS = {
-  esp: "pub", layout: "h", fontName: "typo", fontBody: "louis", logoW: 190, espW: 190, bothLogos: false,
+  esp: "pub", layout: "h", fontName: "louis", fontBody: "louis", logoW: 190, espW: 190,
   nombre: "Mg. Mario Rafael Quiroz Martínez",
   cargo: "Jefe de la Unidad de Investigación",
   area: "Unidad de Investigación",
   email: "u_investigacion@idc.edu.pe", tel: "(01) 4330262", cel: "+51 997898284",
   web: "www.idc.edu.pe", dir: "Lima, Perú",
-  iconStyle: "icon", imgBase: "",
-  idcUrl: "", avisoOn: true,
+  iconStyle: "icon", logoSel: "auto",
+  avisoOn: true,
   aviso: "Este mensaje y sus anexos son confidenciales y están dirigidos exclusivamente a su destinatario. Si lo recibió por error, comuníquelo al remitente y elimínelo."
 };
 var KEY = "idc-firmas-v2";
 var S = {};
-var espLogos = {}; // { esp: {src, url} }
+
 
 var DIRTY = false, SAVED_AT = "";
 function markDirty(){ if (booting) return; DIRTY = true; showSave(); }
@@ -427,21 +406,21 @@ var booting = true;
 function load(){
   /* ancho fijo del logo de programa */
   S = JSON.parse(JSON.stringify(DEFAULTS));
-  try { var raw = localStorage.getItem(KEY); if (raw){ var o = JSON.parse(raw); Object.assign(S, o.S || {}); espLogos = o.L || {}; S.espW = 190; S.logoW = 190; Object.keys(espLogos).forEach(function(k){ if (espLogos[k] && espLogos[k].off) delete espLogos[k]; }); SAVED_AT = o.t || "anterior"; } } catch(e){}
+  try { var raw = localStorage.getItem(KEY); if (raw){ var o = JSON.parse(raw); Object.assign(S, o.S || {}); delete S.bothLogos; S.fontName = "louis"; S.fontBody = "louis"; S.iconStyle = "icon"; S.espW = 190; S.logoW = 190; SAVED_AT = o.t || "anterior"; } } catch(e){}
   S.layout = "h";
 }
 function save(){
   var t = new Date().toLocaleString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
-  try { localStorage.setItem(KEY, JSON.stringify({ S: S, L: espLogos, t: t })); }
+  try { localStorage.setItem(KEY, JSON.stringify({ S: S, t: t })); }
   catch(e){
-    try { localStorage.setItem(KEY, JSON.stringify({ S: S, L: {}, t: t })); toast("Datos guardados sin los logos cargados (exceden el espacio del navegador)."); }
+    try { localStorage.setItem(KEY, JSON.stringify({ S: S, t: t })); toast("Datos guardados sin los logos cargados (exceden el espacio del navegador)."); }
     catch(e2){ toast("El navegador no permite guardar datos en esta ventana."); return; }
   }
   SAVED_AT = t; DIRTY = false; showSave(); toast("Datos guardados en este navegador.");
 }
 function openPreview(){
   render();
-  $("mSig").innerHTML = buildSig();
+  $("mSig").innerHTML = buildSig(true);
   $("mFrom").textContent = S.nombre + (S.email ? " <" + S.email + ">" : "");
   $("modal").hidden = false; $("modalClose").focus();
 }
@@ -454,21 +433,21 @@ function lum(hex){
 function onColor(hex){ var L = lum(hex); return (1.05)/(L+0.05) >= 3 ? "#ffffff" : "#4a4b56"; }
 
 /* ---------- Constructor de la firma (HTML de correo) ---------- */
-function buildSig(){
+function buildSig(preview){
   var e = ESP[S.esp], C = e.c;
   var FN = FONTS[S.fontName].s, FB = FONTS[S.fontBody].s;
-  var idcSrc = S.idcUrl.trim() || (baseUrl() ? baseUrl() + "idc.png" : IDC_LOGO);
-  var lg = espLogos[S.esp] || {};
-  var espSrc = (lg.url && lg.url.trim()) || lg.src || (lg.off ? "" : (ESP_LOGO[S.esp] ? (baseUrl() ? baseUrl() + "logo-" + S.esp + ".png" : ESP_LOGO[S.esp]) : ""));
-  var hasLockup = S.esp !== "inst" && !!espSrc;
+  var LK = logoKey();
+  var idcSrc = preview ? IDC_LOGO : IMG_BASE_FIXED + "idc.png";
+  var espSrc = LK === "inst" ? "" : (preview ? ESP_LOGO[LK] : IMG_BASE_FIXED + logoFile(LK));
+  var hasLockup = !!espSrc;
   var T = "border-collapse:collapse;mso-table-lspace:0;mso-table-rspace:0;";
   var P = " cellpadding=\"0\" cellspacing=\"0\" border=\"0\" role=\"presentation\"";
 
   var idcImg = "<img src=\"" + esc(idcSrc) + "\" width=\"" + S.logoW + "\" alt=\"IDC Diseño y Comunicación\" style=\"display:block;width:" + S.logoW + "px;height:auto;border:0;\">";
 
   function espMark(onBand){
-    if (S.esp === "inst") return "";
-    if (espSrc) return "<img src=\"" + esc(espSrc) + "\" width=\"" + S.espW + "\" alt=\"" + esc(e.n) + "\" style=\"display:block;width:" + S.espW + "px;height:auto;border:0;\">";
+    if (!espSrc) return "";
+    if (espSrc) return "<img src=\"" + esc(espSrc) + "\" width=\"" + S.espW + "\" alt=\"" + esc(ESP[LK].n) + "\" style=\"display:block;width:" + S.espW + "px;height:auto;border:0;\">";
     var col = onBand ? onColor(C) : C;
     var bar = onBand ? "" : "border-left:4px solid " + C + ";padding-left:8px;";
     return "<table" + P + " style=\"" + T + "\"><tr><td style=\"" + bar + "font-family:" + FN + ";font-size:12px;line-height:15px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:" + col + ";\">" + esc(e.n) + "</td></tr></table>";
@@ -480,7 +459,7 @@ function buildSig(){
       if (!v) return;
       var val = href ? "<a href=\"" + esc(href) + "\" style=\"color:#545452;text-decoration:none;\">" + esc(v) + "</a>" : esc(v);
       var mk = S.iconStyle === "icon"
-        ? "<img src=\"" + esc(baseUrl() ? baseUrl() + "icono-" + ik + "-" + S.esp + ".png" : iconURI(ik, C)) + "\" width=\"16\" height=\"16\" alt=\"" + k + "\" style=\"display:block;width:16px;height:16px;border:0;\">"
+        ? "<img src=\"" + esc(preview ? iconURI(ik, C) : IMG_BASE_FIXED + "icono-" + ik + "-" + S.esp + ".png") + "\" width=\"16\" height=\"16\" alt=\"" + k + "\" style=\"display:block;width:16px;height:16px;border:0;\">"
         : k;
       rows.push("<tr><td width=\"24\" style=\"width:24px;font-family:" + FB + ";font-size:12px;line-height:18px;font-weight:bold;color:" + C + ";padding:" + (S.iconStyle === "icon" ? "2px 8px 2px 0" : "0 8px 0 0") + ";vertical-align:middle;\">" + mk + "</td><td style=\"font-family:" + FB + ";font-size:12px;line-height:18px;color:#545452;vertical-align:middle;\">" + val + "</td></tr>");
     }
@@ -493,7 +472,7 @@ function buildSig(){
   }
 
   function nameBlock(){
-    var h = "<div style=\"font-family:" + FN + ";font-size:19px;line-height:23px;font-weight:bold;color:#4a4b56;\">" + esc(S.nombre).replace(/([.,;:()\-])/g, "<span style=\"font-family:" + FONTS.helv.s + ";\">$1</span>") + "</div>";
+    var h = "<div style=\"font-family:" + FN + ";font-size:19px;line-height:23px;font-weight:bold;color:#4a4b56;\">" + esc(S.nombre) + "</div>";
     if (S.cargo) h += "<div style=\"font-family:" + FB + ";font-size:13px;line-height:18px;color:#555553;margin-top:2px;\">" + esc(S.cargo) + "</div>";
     if (S.area) h += "<div style=\"font-family:" + FB + ";font-size:11px;line-height:16px;letter-spacing:1px;text-transform:uppercase;color:" + C + ";margin-top:3px;\">" + esc(S.area) + "</div>";
     return h;
@@ -509,7 +488,7 @@ function buildSig(){
   {
     var m = espMark(false);
     out = "<table" + P + " style=\"" + T + "\"><tr>" +
-      "<td valign=\"middle\" style=\"padding-right:18px;vertical-align:middle;\">" + (hasLockup ? m + (S.bothLogos ? SP + idcImg : "") : idcImg + (m ? SP + m : "")) + SLOGAN + "</td>" +
+      "<td valign=\"middle\" style=\"padding-right:18px;vertical-align:middle;\">" + (hasLockup ? m : idcImg) + SLOGAN + "</td>" +
       "<td width=\"3\" style=\"width:3px;background-color:" + C + ";font-size:0;line-height:0;\" bgcolor=\"" + C + "\">&nbsp;</td>" +
       "<td valign=\"middle\" style=\"padding-left:18px;vertical-align:middle;\">" + nameBlock() + contacts() + "</td>" +
       "</tr>" + aviso + "</table>";
@@ -519,7 +498,7 @@ function buildSig(){
 
 /* ---------- UI ---------- */
 var $ = function(id){ return document.getElementById(id); };
-var TEXT = ["nombre","cargo","area","email","tel","cel","web","dir","idcUrl","imgBase","aviso"];
+var TEXT = ["nombre","cargo","area","email","tel","cel","web","dir","aviso"];
 
 function buildControls(){
   var ch = "";
@@ -528,9 +507,6 @@ function buildControls(){
   });
   $("espChips").innerHTML = ch;
 
-  var fo = "";
-  Object.keys(FONTS).forEach(function(k){ fo += "<option value=\"" + k + "\">" + FONTS[k].n + "</option>"; });
-  $("fontName").innerHTML = fo; $("fontBody").innerHTML = fo;
   var tk = [["#f3a100","Naranja IDC"],["#0072b9","Azul IDC"],["#555553","Gris 1"],["#545452","Gris 2"],["#4a4b56","Gris 3"],["#009c9d","Interiores"],["#009ad3","Publicitario"],["#e14a94","Modas"],["#f3a20b","Audiovisual"]];
   $("tok").innerHTML = tk.map(function(t){ return "<div><i style=\"background:" + t[0] + "\"></i><span>" + t[0] + "<br>" + t[1] + "</span></div>"; }).join("");
 }
@@ -538,26 +514,20 @@ function buildControls(){
 function fillForm(){
   TEXT.forEach(function(k){ $(k).value = S[k] || ""; });
   $("esp_" + S.esp).checked = true;
-  $("iconStyle").value = S.iconStyle || "icon"; $("fontName").value = S.fontName; $("fontBody").value = S.fontBody;
-  $("avisoOn").checked = !!S.avisoOn; $("bothLogos").checked = !!S.bothLogos;
-  var lg = espLogos[S.esp] || {};
-  $("espUrl").value = lg.url || "";
+  $("avisoOn").checked = !!S.avisoOn;
+  $("logoSel").value = S.logoSel || "auto";
 }
 
 function render(){
   var C = ESP[S.esp].c;
   document.documentElement.style.setProperty("--acc", C);
-  $("espNameLbl").textContent = ESP[S.esp].n;
+  $("logoUrl").textContent = IMG_BASE_FIXED + logoFile(logoKey());
   $("aviso").disabled = !S.avisoOn;
-  var html = buildSig();
-  $("sig").innerHTML = html;
+  var html = buildSig(false);
+  $("sig").innerHTML = buildSig(true);
   $("code").textContent = html.replace(/data:image\/[a-z+]+;base64,[A-Za-z0-9+\/=]+/g, "data:image/…;base64,[imagen incrustada; el botón copia el código completo]");
   // advertencias
   var w = [];
-  var lg = espLogos[S.esp] || {};
-  if (!baseUrl()) w.push("Las imágenes (logo e íconos) van incrustadas. Gmail no las muestra: sube el paquete de imágenes a una carpeta pública y pega su dirección en «Carpeta pública de imágenes».");
-  var hasUrl = lg.url && lg.url.trim();
-  if (false) w.push("El logo de " + ESP[S.esp].n + " va incrustado. Para Gmail usa una URL pública.");
   if (!S.email) w.push("Falta el correo.");
   $("warn").hidden = !w.length;
   $("warn").innerHTML = w.length ? "<b>Antes de instalar</b><ul>" + w.map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "";
@@ -572,10 +542,11 @@ function selectNode(node){
 }
 
 function copyRich(){
-  var html = buildSig();
+  var html = buildSig(false);
   var plain = [S.nombre, S.cargo, S.area, S.email, S.tel, S.cel, S.web, S.dir].filter(Boolean).join("\n");
   function fallback(){
-    selectNode($("sig"));
+    var box = $("sigCopy"); box.innerHTML = html; box.hidden = false;
+    selectNode(box);
     var ok = false; try { ok = document.execCommand("copy"); } catch(e){}
     toast(ok ? "Firma copiada. Pégala en el editor de firmas." : "Firma seleccionada: pulsa Ctrl+C (Cmd+C en Mac).");
   }
@@ -587,7 +558,7 @@ function copyRich(){
   } catch(e){ fallback(); }
 }
 function copyCode(){
-  var html = buildSig();
+  var html = buildSig(false);
   try {
     navigator.clipboard.writeText(html).then(function(){ toast("Código HTML copiado."); }, function(){ selectNode($("code")); toast("Código seleccionado: pulsa Ctrl+C."); });
   } catch(e){ selectNode($("code")); toast("Código seleccionado: pulsa Ctrl+C."); }
@@ -607,21 +578,9 @@ function loadFont(input, family){
 
 function bind(){
   TEXT.forEach(function(k){ $(k).addEventListener("input", function(){ S[k] = this.value; render(); }); });
-  $("espChips").addEventListener("change", function(ev){ S.esp = ev.target.value; fillForm(); render(); });
-  $("iconStyle").addEventListener("change", function(){ S.iconStyle = this.value; render(); });
-  $("fontName").addEventListener("change", function(){ S.fontName = this.value; render(); });
-  $("fontBody").addEventListener("change", function(){ S.fontBody = this.value; render(); });
-  $("bothLogos").addEventListener("change", function(){ S.bothLogos = this.checked; render(); });
+  $("espChips").addEventListener("change", function(ev){ S.esp = ev.target.value; S.logoSel = "auto"; fillForm(); render(); });
+  $("logoSel").addEventListener("change", function(){ S.logoSel = this.value; render(); });
   $("avisoOn").addEventListener("change", function(){ S.avisoOn = this.checked; render(); });
-  $("espUrl").addEventListener("input", function(){ espLogos[S.esp] = espLogos[S.esp] || {}; espLogos[S.esp].url = this.value; render(); });
-  $("espFile").addEventListener("change", function(){
-    var f = this.files && this.files[0]; if (!f) return;
-    var key = S.esp, rd = new FileReader();
-    rd.onload = function(){ espLogos[key] = espLogos[key] || {}; espLogos[key].src = rd.result; espLogos[key].off = false; render(); toast("Logo cargado."); };
-    rd.readAsDataURL(f); this.value = "";
-  });
-  $("ffTypo").addEventListener("change", function(){ loadFont(this, "Typo Formal Demo"); });
-  $("ffLouis").addEventListener("change", function(){ loadFont(this, "Louis George Cafe"); });
   $("previewBtn").addEventListener("click", openPreview);
   $("saveBtn").addEventListener("click", save);
   $("modalClose").addEventListener("click", closePreview);
@@ -636,7 +595,7 @@ function bind(){
   });
   $("copyRich").addEventListener("click", copyRich);
   $("copyCode").addEventListener("click", copyCode);
-  $("reset").addEventListener("click", function(){ S = JSON.parse(JSON.stringify(DEFAULTS)); espLogos = {}; fillForm(); render(); toast("Datos de ejemplo restablecidos."); });
+  $("reset").addEventListener("click", function(){ S = JSON.parse(JSON.stringify(DEFAULTS)); fillForm(); render(); toast("Datos de ejemplo restablecidos."); });
   $("bgLight").addEventListener("click", function(){ $("mail").classList.remove("dark"); this.setAttribute("aria-pressed","true"); $("bgDark").setAttribute("aria-pressed","false"); });
   $("bgDark").addEventListener("click", function(){ $("mail").classList.add("dark"); this.setAttribute("aria-pressed","true"); $("bgLight").setAttribute("aria-pressed","false"); });
 }
