@@ -8,7 +8,7 @@ Versión: septiembre de 2026.
 
 | Archivo | Descripción |
 |---|---|
-| `firmas-idc.html` | Generador. Archivo único de unos 245 KB que incluye estilos, código, logos e íconos. |
+| `firmas-idc.html` | Generador. Archivo único de unos 235 KB que incluye estilos, código, logos e íconos. |
 | `firmas-idc-imagenes.zip` | Carpeta `firmas-idc` con las 30 imágenes que usa la firma, para publicarlas en un servidor público. |
 | `README.md` | Este documento. |
 
@@ -16,7 +16,7 @@ Versión: septiembre de 2026.
 
 - Navegador de escritorio: Chrome, Edge, Firefox o Safari.
 - Cuenta de correo institucional en Google Workspace ("Correo de IDC"), usada desde el navegador.
-- Una carpeta pública en internet para las imágenes (por ejemplo, GitHub Pages).
+- Conexión a internet para que Gmail cargue las imágenes desde GitHub Pages.
 
 El archivo HTML funciona sin instalación. Solo la tipografía de la interfaz (Lexend e IBM Plex Mono) se descarga de Google Fonts; sin conexión, la interfaz usa Helvetica o Arial.
 
@@ -30,6 +30,8 @@ El archivo HTML funciona sin instalación. Solo la tipografía de la interfaz (L
 | `mod` | Diseño de Modas | `#e14a94` | `logo-mod.png` |
 | `cav` | Comunicación Audiovisual | `#f3a20b` | `logo-cav.png` |
 
+Los logotipos se aplican de acuerdo con las normas técnicas del Manual de Uso de Marca del Instituto de Educación Superior Público "Diseño y Comunicación".
+
 Colores institucionales: `#f3a100`, `#0072b9`, `#555553`, `#545452`, `#4a4b56`.
 
 El color de la especialidad se aplica al filete vertical, al texto del área, a los íconos de contacto y a la línea "Primer Instituto Licenciado".
@@ -40,29 +42,26 @@ Diseño horizontal de dos columnas:
 
 - Columna izquierda (190 px): logo del programa de estudio o logo institucional, y debajo el texto "Primer Instituto Licenciado / Resolución Viceministerial N.° 164-2025-MINEDU".
 - Filete vertical de 3 px en el color de la especialidad.
-- Columna derecha: nombre (19 px), cargo (13 px), área (11 px, mayúsculas) y datos de contacto (12 px) con íconos de 16 px: correo, teléfono, celular, sitio web y dirección.
+- Columna derecha: nombre (19 px), cargo (13 px), área (11 px, mayúsculas) y datos de contacto (12 px) con íconos de 16 px: correo, teléfono, celular, sitio web, ORCID y dirección. El marcador de ORCID es un círculo de 16 px del color de la especialidad con el texto "iD", hecho en HTML y no como imagen.
 - Aviso de confidencialidad opcional al pie (10 px).
 
-Tipografía: Typo Formal Demo para el nombre y Louis George Cafe para el texto, con Helvetica y Arial como alternativas. Quien recibe el correo ve Typo Formal Demo y Louis George Cafe solo si tiene esas fuentes instaladas. En el nombre, los signos de puntuación se escriben en Helvetica, porque la versión Demo de Typo Formal no dibuja bien el punto.
+Tipografía fija, no configurable desde el generador: Louis George Cafe para el nombre y para el texto, con Helvetica y Arial como alternativas. Quien recibe el correo ve Louis George Cafe solo si tiene la fuente instalada.
 
 ## Uso del generador
 
 1. Abrir `firmas-idc.html` en el navegador.
-2. Elegir la especialidad.
-3. Completar "Datos personales": nombre, cargo, área, correo, teléfono, celular, sitio web y dirección. Los campos vacíos no aparecen en la firma.
-4. En "Logotipos", pegar la dirección de la carpeta pública de imágenes (ver la sección siguiente).
+2. Elegir la especialidad. "Institucional" es para docentes, personal administrativo y personal jerárquico. Diseño de Interiores, Diseño Publicitario, Diseño de Modas y Comunicación Audiovisual son para estudiantes, según su especialidad.
+3. Completar "Datos personales": nombre, cargo, área, correo, teléfono, celular, sitio web, ORCID y dirección. Los campos vacíos no aparecen en la firma. El campo ORCID acepta el número (por ejemplo, `0000-0001-6266-7132`) o la dirección completa; en la firma se muestra como enlace `https://orcid.org/0000-0001-6266-7132`. Si el número no tiene los 16 caracteres, no se muestra. Quien no tenga ORCID puede registrarlo en https://orcid.org/signin; la etiqueta del campo enlaza a esa página.
+4. En "Logotipos › Logo de la firma", dejar "Según la especialidad elegida" o elegir otro logo de la lista.
 5. Pulsar "Previsualizar" para ver la firma a tamaño real dentro de un correo de ejemplo, con fondo claro u oscuro.
 6. Pulsar "Guardar datos". Los datos quedan en el almacenamiento local del navegador (clave `idc-firmas-v2`) y no se comparten con otros equipos ni con otras personas.
 7. Pulsar "Copiar firma" y pegarla en Gmail.
 
-Mientras no haya carpeta pública de imágenes, la página muestra el aviso "Antes de instalar".
+La dirección de la carpeta de imágenes va incrustada en el generador y no se edita. La vista previa usa copias internas de las imágenes; la firma copiada usa las direcciones públicas.
 
 Otras opciones:
 
-- "Marcadores de contacto": íconos en círculo de color o letras (E, T, M, W, D).
-- "Mostrar también el logo institucional IDC": agrega el logo institucional debajo del logo del programa.
-- Cargar un logo propio para la especialidad, desde un archivo o una URL.
-- Cargar los archivos de Typo Formal Demo y Louis George Cafe para verlas en la vista previa.
+- "Logo de la firma": lista con los cinco logos (institucional y cuatro programas). Al cambiar de especialidad vuelve a "Según la especialidad elegida".
 - "Copiar código HTML": copia el código fuente de la firma.
 - "Restablecer ejemplo": vuelve a los datos de ejemplo.
 
@@ -82,9 +81,11 @@ Pasos en GitHub Pages:
 2. Add file › Upload files. Subir los 30 archivos, es decir, el contenido de la carpeta y no la carpeta. Botón Commit changes.
 3. Settings › Pages. Source: Deploy from a branch. Branch: `main`, carpeta `/ (root)`. Botón Save.
 4. Después de uno o dos minutos, abrir `https://USUARIO.github.io/firmas-idc/idc.png` para comprobar que el logo carga.
-5. Pegar `https://USUARIO.github.io/firmas-idc/` en el campo "Carpeta pública de imágenes" y pulsar "Guardar datos".
+5. Si se usa una carpeta distinta de la actual, cambiar la constante `IMG_BASE_FIXED` en `firmas-idc.html`.
 
 Si se cambia una imagen, hay que reemplazar el archivo con el mismo nombre en el repositorio.
+
+Carpeta en uso, incrustada en el generador: `https://uinvestigacion-idc.github.io/firmas-idc/`. Para usar otra carpeta hay que cambiar la constante `IMG_BASE_FIXED` en el código de `firmas-idc.html`.
 
 ## Instalación en Gmail (Correo de IDC)
 
@@ -103,10 +104,10 @@ La app de Gmail para celular tiene su propio ajuste de firma, solo de texto, y n
 
 | Síntoma | Causa | Solución |
 |---|---|---|
-| Cuadros vacíos en lugar del logo o los íconos | La carpeta pública es incorrecta o todavía no está activa | Abrir la dirección de la carpeta seguida de `idc.png` en el navegador |
+| Cuadros vacíos en lugar del logo o los íconos | El archivo no está en la carpeta pública o la cuenta que recibe bloquea imágenes externas | Abrir `https://uinvestigacion-idc.github.io/firmas-idc/idc.png` en el navegador |
 | La firma se pega sin formato | El navegador no permitió copiar con formato | Pulsar de nuevo "Copiar firma"; la firma queda seleccionada en la vista previa y se copia con Ctrl + C |
-| Gmail indica que la firma es demasiado larga | Las imágenes van incrustadas | Completar la carpeta pública de imágenes antes de copiar |
-| La tipografía cambia a Helvetica o Arial | Quien recibe no tiene instaladas las fuentes de la marca | Es el comportamiento esperado |
+| Gmail indica que la firma es demasiado larga | Se pegó una copia antigua con imágenes incrustadas | Pulsar de nuevo "Copiar firma" y pegar |
+| La tipografía cambia a Helvetica o Arial | Quien recibe no tiene instalada Louis George Cafe | Es el comportamiento esperado |
 | Las imágenes no se ven en la cuenta que recibe | Esa cuenta tiene activado "Preguntar antes de mostrar imágenes externas" | Pulsar "Mostrar imágenes" en el mensaje |
 
 ## Limitaciones conocidas
@@ -114,7 +115,6 @@ La app de Gmail para celular tiene su propio ajuste de firma, solo de texto, y n
 - La guía de instalación cubre solo Gmail desde el navegador.
 - Los nombres de los menús de Gmail pueden cambiar con actualizaciones de Google. Los pasos 2 a 7 se basan en la configuración de Correo de IDC de septiembre de 2026.
 - El nombre de la ventana que aparece después de pulsar "Crear" y las listas de "Valores predeterminados de firma" no se verificaron en pantalla.
-- Typo Formal Demo es una versión de demostración. Antes de usarla en la firma institucional conviene revisar su licencia.
 - Los tonos de los logos de Diseño de Modas (cercano a `#c83186`) y Comunicación Audiovisual (cercano a `#e09c28`) no coinciden exactamente con los colores de especialidad `#e14a94` y `#f3a20b`.
 
 ## Créditos

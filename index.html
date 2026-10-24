@@ -56,6 +56,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .chip span b{width:14px;height:14px;border-radius:50%;flex:none;background:var(--c)}
 .chip input:checked + span{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c);font-weight:500}
 .chip.wide{grid-column:1/-1}
+.chiptx{font-style:normal}
+.chiptx small{display:block;font-size:11.5px;font-weight:300;color:var(--mute);margin-top:2px}
+label.f a{color:var(--blue);font-weight:400}
+.chipgroup{grid-column:1/-1;margin:6px 0 0;font-size:11.5px;font-weight:500;letter-spacing:.04em;color:var(--mute)}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .check{display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:400;color:var(--ink2)}
 .hint{font-size:12px;color:var(--mute);margin:0}
@@ -162,6 +166,8 @@ footer{margin-top:28px;color:var(--mute);font-size:12px;border-top:1px solid var
             <label class="f">Celular<input type="tel" id="cel"></label>
             <label class="f">Sitio web<input type="text" id="web"></label>
           </div>
+          <label class="f"><span>ORCID · <a href="https://orcid.org/signin" target="_blank" rel="noopener">registra u obtén tu ORCID en orcid.org/signin</a></span><input type="text" id="orcid" placeholder="0000-0000-0000-0000" inputmode="text" autocomplete="off"></label>
+          <p class="hint" id="orcidHint">Escribe el número o pega la dirección completa. Se mostrará como enlace a https://orcid.org/…</p>
           <label class="f">Dirección<input type="text" id="dir"></label>
         </div>
       </section>
@@ -382,15 +388,16 @@ function iconURI(type, color){
 }
 window.__iconURI = iconURI;
 var IMG_BASE_FIXED = "https://uinvestigacion-idc.github.io/firmas-idc/";
+function orcidId(v){ var m = String(v || "").match(/(\d{4})-?(\d{4})-?(\d{4})-?(\d{3}[\dXx])/); return m ? (m[1] + "-" + m[2] + "-" + m[3] + "-" + m[4]).toUpperCase() : ""; }
 function logoKey(){ return (S.logoSel && S.logoSel !== "auto") ? S.logoSel : S.esp; }
 function logoFile(k){ return k === "inst" ? "idc.png" : "logo-" + k + ".png"; }
 var DEFAULTS = {
-  esp: "pub", layout: "h", fontName: "louis", fontBody: "louis", logoW: 190, espW: 190,
+  esp: "inst", layout: "h", fontName: "louis", fontBody: "louis", logoW: 190, espW: 190,
   nombre: "Mg. Mario Rafael Quiroz Martínez",
   cargo: "Jefe de la Unidad de Investigación",
   area: "Unidad de Investigación",
   email: "u_investigacion@idc.edu.pe", tel: "(01) 4330262", cel: "+51 997898284",
-  web: "www.idc.edu.pe", dir: "Lima, Perú",
+  web: "www.idc.edu.pe", orcid: "0000-0001-6266-7132", dir: "Lima, Perú",
   iconStyle: "icon", logoSel: "auto",
   avisoOn: true,
   aviso: "Este mensaje y sus anexos son confidenciales y están dirigidos exclusivamente a su destinatario. Si lo recibió por error, comuníquelo al remitente y elimínelo."
@@ -458,7 +465,9 @@ function buildSig(preview){
     function r(k, ik, v, href){
       if (!v) return;
       var val = href ? "<a href=\"" + esc(href) + "\" style=\"color:#545452;text-decoration:none;\">" + esc(v) + "</a>" : esc(v);
-      var mk = S.iconStyle === "icon"
+      var mk = ik === "orcid"
+        ? "<table" + P + " style=\"" + T + "\"><tr><td width=\"16\" height=\"16\" bgcolor=\"" + C + "\" align=\"center\" style=\"width:16px;height:16px;border-radius:8px;background-color:" + C + ";color:#ffffff;font-family:Arial, Helvetica, sans-serif;font-size:8px;line-height:16px;font-weight:bold;text-align:center;\">iD</td></tr></table>"
+        : S.iconStyle === "icon"
         ? "<img src=\"" + esc(preview ? iconURI(ik, C) : IMG_BASE_FIXED + "icono-" + ik + "-" + S.esp + ".png") + "\" width=\"16\" height=\"16\" alt=\"" + k + "\" style=\"display:block;width:16px;height:16px;border:0;\">"
         : k;
       rows.push("<tr><td width=\"24\" style=\"width:24px;font-family:" + FB + ";font-size:12px;line-height:18px;font-weight:bold;color:" + C + ";padding:" + (S.iconStyle === "icon" ? "2px 8px 2px 0" : "0 8px 0 0") + ";vertical-align:middle;\">" + mk + "</td><td style=\"font-family:" + FB + ";font-size:12px;line-height:18px;color:#545452;vertical-align:middle;\">" + val + "</td></tr>");
@@ -467,6 +476,8 @@ function buildSig(preview){
     r("T", "tel", S.tel, S.tel ? "tel:" + S.tel.replace(/[^\d+]/g,"") : "");
     r("M", "cel", S.cel, S.cel ? "tel:" + S.cel.replace(/[^\d+]/g,"") : "");
     if (S.web) r("W", "web", S.web, /^https?:/.test(S.web) ? S.web : "https://" + S.web);
+    var oid = orcidId(S.orcid);
+    if (oid) r("ORCID", "orcid", "https://orcid.org/" + oid, "https://orcid.org/" + oid);
     r("D", "dir", S.dir, "");
     return rows.length ? "<table" + P + " style=\"" + T + "margin-top:10px;\">" + rows.join("") + "</table>" : "";
   }
@@ -498,12 +509,14 @@ function buildSig(preview){
 
 /* ---------- UI ---------- */
 var $ = function(id){ return document.getElementById(id); };
-var TEXT = ["nombre","cargo","area","email","tel","cel","web","dir","aviso"];
+var TEXT = ["nombre","cargo","area","email","tel","cel","web","orcid","dir","aviso"];
 
 function buildControls(){
   var ch = "";
   Object.keys(ESP).forEach(function(k){
-    ch += "<label class=\"chip" + (k==="inst" ? " wide" : "") + "\" style=\"--c:" + ESP[k].c + "\"><input type=\"radio\" name=\"esp\" id=\"esp_" + k + "\" value=\"" + k + "\"><span><b></b>" + ESP[k].n + "</span></label>";
+    if (k === "int") ch += "<p class=\"chipgroup\">Estudiantes, según su especialidad</p>";
+    var sub = k === "inst" ? "<small>Docentes, administrativos y personal jerárquico</small>" : "";
+    ch += "<label class=\"chip" + (k==="inst" ? " wide" : "") + "\" style=\"--c:" + ESP[k].c + "\"><input type=\"radio\" name=\"esp\" id=\"esp_" + k + "\" value=\"" + k + "\"><span><b></b><em class=\"chiptx\">" + ESP[k].n + sub + "</em></span></label>";
   });
   $("espChips").innerHTML = ch;
 
@@ -529,6 +542,8 @@ function render(){
   // advertencias
   var w = [];
   if (!S.email) w.push("Falta el correo.");
+  var oraw = (S.orcid || "").trim(), oid = orcidId(oraw);
+  $("orcidHint").textContent = !oraw ? "Opcional. Escribe el número o pega la dirección completa. Si aún no tienes ORCID, regístralo en https://orcid.org/signin." : (oid ? "Enlace: https://orcid.org/" + oid : "El número ORCID tiene 16 caracteres en grupos de 4 (por ejemplo, 0000-0001-6266-7132). No se mostrará hasta que esté completo.");
   $("warn").hidden = !w.length;
   $("warn").innerHTML = w.length ? "<b>Antes de instalar</b><ul>" + w.map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "";
   markDirty();
@@ -543,7 +558,7 @@ function selectNode(node){
 
 function copyRich(){
   var html = buildSig(false);
-  var plain = [S.nombre, S.cargo, S.area, S.email, S.tel, S.cel, S.web, S.dir].filter(Boolean).join("\n");
+  var plain = [S.nombre, S.cargo, S.area, S.email, S.tel, S.cel, S.web, orcidId(S.orcid) ? "https://orcid.org/" + orcidId(S.orcid) : "", S.dir].filter(Boolean).join("\n");
   function fallback(){
     var box = $("sigCopy"); box.innerHTML = html; box.hidden = false;
     selectNode(box);
